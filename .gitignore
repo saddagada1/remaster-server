@@ -1,0 +1,11 @@
+# dependencies
+/node_modules
+
+# ts-node
+/dist
+
+# local env files
+.env
+
+# typescript
+*.tsbuildinfo
