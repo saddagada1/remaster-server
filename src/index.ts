@@ -10,6 +10,8 @@ import session from "express-session";
 import { COOKIE_NAME, __prod__ } from "./constants";
 import cors from "cors";
 import { AppDataSource } from "./data-source";
+import { SpotifyResolver } from "./resolvers/spotify";
+import { SpotifyInit } from "./spotify/init";
 
 const main = async () => {
   AppDataSource.initialize()
@@ -53,7 +55,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver, RemasterResolver],
+      resolvers: [UserResolver, RemasterResolver, SpotifyResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({ req, res, redis}),
@@ -69,6 +71,8 @@ const main = async () => {
   app.listen(4000, () => {
     console.log("server started on localhost:4000");
   });
+
+  SpotifyInit();
 
 };
 
