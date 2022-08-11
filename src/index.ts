@@ -12,6 +12,7 @@ import cors from "cors";
 import { AppDataSource } from "./data-source";
 import { SpotifyResolver } from "./resolvers/spotify";
 import { SpotifyInit } from "./spotify/init";
+import { ChordsResolver } from "./resolvers/chords";
 
 const main = async () => {
   AppDataSource.initialize()
@@ -55,7 +56,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver, RemasterResolver, SpotifyResolver],
+      resolvers: [UserResolver, RemasterResolver, SpotifyResolver, ChordsResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({ req, res, redis}),
