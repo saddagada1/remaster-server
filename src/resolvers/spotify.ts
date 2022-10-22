@@ -42,6 +42,14 @@ class SpotifyArtist {
 }
 
 @ObjectType()
+class SpotifyGetTokenResponse {
+  @Field()
+  id!: number;
+  @Field()
+  token?: string;
+}
+
+@ObjectType()
 class SpotifySearchResponse {
   @Field()
   id!: string;
@@ -112,6 +120,13 @@ const mapArtists = (artists: SpotifyApi.ArtistObjectFull[]): SpotifyArtist[] => 
 
 @Resolver()
 export class SpotifyResolver {
+  @Query(() => SpotifyGetTokenResponse)
+  async spotifyGetToken(): Promise<SpotifyGetTokenResponse> {
+    const token = await spotifyApi.clientCredentialsGrant();
+    return {
+      id: 1, token: token.body.access_token
+    };
+  }
   @Query(() => SpotifySearchResponse)
   async spotifySearch(@Arg("query") query: string): Promise<SpotifySearchResponse> {
     const searchResponse = await spotifyApi.search(query, ["track", "album", "artist"], {limit: 50});

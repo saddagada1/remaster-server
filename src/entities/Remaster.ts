@@ -3,6 +3,50 @@ import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGenerat
 import { User } from "./User";
 
 @ObjectType()
+class Barre {
+  @Field()
+  from!: number;
+  @Field()
+  to!: number;
+  @Field()
+  fret!: number;
+}
+
+@ObjectType()
+class Chord {
+  @Field(() => String || undefined)
+  title: string | undefined;
+  @Field(() => [[Number, Number || "x"]])
+  fingers!: [[number, number | "x"]];
+  @Field(() => [Barre])
+  barres!: Barre[];
+  @Field()
+  position: number;
+}
+
+@ObjectType()
+class Loop {
+  @Field()
+  id: number;
+  @Field()
+  name!: string;
+  @Field()
+  key!: string;
+  @Field()
+  type!: string;
+  @Field()
+  start!: number;
+  @Field()
+  end!: number;
+  @Field()
+  colour!: string;
+  @Field(() => Chord)
+  chord: Chord;
+  @Field()
+  tab: string;
+}
+
+@ObjectType()
 @Entity()
 export class Remaster extends BaseEntity {
   @Field()
@@ -19,7 +63,23 @@ export class Remaster extends BaseEntity {
 
   @Field()
   @Column()
-  trackId: string;
+  trackId!: string;
+
+  @Field()
+  @Column()
+  key!: string;
+
+  @Field(() => [String])
+  @Column("text", {array: true})
+  tuning!: string[];
+
+  @Field(() => [Loop])
+  @Column("jsonb", {array: true})
+  loops!: Loop[];
+
+  @Field(() => [Chord])
+  @Column("jsonb", {array: true})
+  createdChords!: Chord[];
 
   @Field()
   @Column()
@@ -30,7 +90,7 @@ export class Remaster extends BaseEntity {
   likes!: number;
 
   @ManyToOne(() => User, (user) => user.remasters)
-  creator: User
+  creator!: User
 
   @Field(() => String)
   @CreateDateColumn()
